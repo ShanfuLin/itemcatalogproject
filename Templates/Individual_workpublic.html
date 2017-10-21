@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>  </title>
+    <link href="{{url_for('static', filename='Individual_work.css')}}" rel="stylesheet">
+  </head>
+  <body>
+    <header class= "header">
+      <div><img id="standard_logo" src="https://bbkphilosophysociety.files.wordpress.com/2014/06/6a010535ce1cf6970c0163018bb9c2970d.jpg" alt="Curioos"></div>
+      <div class="sub_header1">
+        THE THOUGHTS REPOSITORY
+      </div>
+      <div>
+        {% if 'username' not in login_session%}
+        <a id="logout_button" href="{{ url_for('showLogin')}}">
+          Login
+        </a>
+        {% else %}
+        <a id="logout_button" href="{{ url_for('gdisconnect')}}">
+          {{login_session['username']}} Logout
+        </a>
+        {% endif %}
+      </div>
+    </header>
+    <div>
+      <div class="Worktitle_container"><a>{{author.name}}</a><br><a>{{work.work_title}}</a></div>
+      <div class="content_container">
+        <br>
+        <div class="content">
+          {{work.summary}}
+        </div>
+        <br>
+        Forum Discussion
+        <div class="content">
+        {% for discussion in discussions %}
+        <div>
+          {{discussion.message}}
+        </div>
+        <br>
+        <br>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

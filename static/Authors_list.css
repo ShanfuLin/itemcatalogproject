@@ -1,0 +1,69 @@
+body{
+  margin:0px;
+}
+
+.header{
+  background-color: black;
+  overflow:scroll;
+  height:120px;
+  position:relative;
+  width:100%;
+  border-style:double;
+  margin-bottom:20px;
+}
+
+.sub_header1{
+  font-family: cursive;
+  font-size: 40px;
+  margin-top: 25px;
+  color:white;
+  width:50%;
+  list-style: none;
+  left:5px;
+  bottom:10px;
+  float:left;
+}
+
+.Authorname_container{
+  margin-bottom: 30px;
+}
+
+.work_container{
+  display:flex;
+}
+
+.content{
+  width:20%;
+}
+
+.clear{
+  float:right;
+}
+
+#logout_button {
+  color:white;
+  display: block;
+  margin: auto;
+  width: 10%;
+  height:10%;
+  font-size: 15px;
+  float:right;
+  clear:right;
+  text-align: center;
+}
+
+#standard_logo{
+  margin-top: 10px;
+  display: block;
+  width: 10%;
+  float:left;
+}
+
+#profile_pic {
+  display: block;
+  margin: auto;
+  width: 8%;
+  height:10%;
+  float:right;
+  border-radius: 50px;
+}

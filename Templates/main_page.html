@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>  </title>
+  <link href="{{ url_for('static', filename='main_page.css')}}" rel="stylesheet">
+</head>
+<body>
+  <header class= "header">
+    <div><img id="standard_logo" src="https://bbkphilosophysociety.files.wordpress.com/2014/06/6a010535ce1cf6970c0163018bb9c2970d.jpg" alt="Curioos"></div>
+    <div class="sub_header1">
+      THE THOUGHTS REPOSITORY
+    </div>
+    <a class="sub_header2" href="{{ url_for('gdisconnect')}}">
+      {{login_session['username']}} Logout
+    </a>
+  </header>
+  <div class="container">
+    <div class="test1"><br><a href="{{ url_for('showdarkauthors')}}">Dark</a></div>
+    <div class="test2"><br><a href="{{ url_for('showlightauthors')}}">Light</a></div>
+  </div>
+</body>
+</html>
