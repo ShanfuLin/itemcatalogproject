@@ -267,17 +267,22 @@ def showindividualwork(author_id, worktitle_id):
 # Code to allow logged-in user to create new message in forum
 @app.route('/<int:author_id>/<int:worktitle_id>/newmessage/', methods=['GET', 'POST'])
 def newmessage(author_id, worktitle_id):
-    if request.method == 'POST':
-        message = request.form['message']
-        date = today.strftime('%d/%m/%Y')
-        discussion = Discussion(message=message, date_created=date,
-        user_id=login_session['user_id'], work_id=worktitle_id)
-        session.add(discussion)
-        session.commit()
-        return redirect(url_for('showindividualwork', author_id=author_id,
-                worktitle_id=worktitle_id))
+    if 'username' not in login_session:
+        return '''Please ensure that you are logged in.<script>function
+                myFunction() {alert('Please ensure that you are logged
+                in first.');}</script><body onload='myFunction()'>'''
     else:
-        return render_template('newmessage.html')
+        if request.method == 'POST':
+            message = request.form['message']
+            date = today.strftime('%d/%m/%Y')
+            discussion = Discussion(message=message, date_created=date,
+            user_id=login_session['user_id'], work_id=worktitle_id)
+            session.add(discussion)
+            session.commit()
+            return redirect(url_for('showindividualwork', author_id=author_id,
+                    worktitle_id=worktitle_id))
+        else:
+            return render_template('newmessage.html')
 
 
 # Code to allow super-user to edit/moderate message in forum. Before you can
@@ -287,18 +292,25 @@ def newmessage(author_id, worktitle_id):
 def editmessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
     work_id = discussion.work_id
+    messageauthor = discussion.user
     work_title = session.query(Work_titles).filter_by(id=work_id).one()
     author_id = work_title.author_id
-    if request.method == 'POST':
-        updatedmessage = request.form['message']
-        date = today.strftime('%d/%m/%Y')
-        discussion.message = updatedmessage
-        session.add(discussion)
-        session.commit()
-        return redirect(url_for('showindividualwork', author_id=author_id,
-                worktitle_id=work_id))
+    if messageauthor.superuser != "Yes":
+        return '''Insufficient rights. Please look for your administrator.
+                <script>function myFunction() {alert('You are not authorized
+                to edit messages in the forum. Please ensure that you have
+                superuser rights.');}</script><body onload='myFunction()'>'''
     else:
-        return render_template('editmessage.html', message_id=message_id)
+        if request.method == 'POST':
+            updatedmessage = request.form['message']
+            date = today.strftime('%d/%m/%Y')
+            discussion.message = updatedmessage
+            session.add(discussion)
+            session.commit()
+            return redirect(url_for('showindividualwork', author_id=author_id,
+                    worktitle_id=work_id))
+        else:
+            return render_template('editmessage.html', message_id=message_id)
 
 
 # Code to allow super-user to delete message in forum. Before you can
@@ -308,15 +320,22 @@ def editmessage(message_id):
 def deletemessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
     work_id = discussion.work_id
+    messageauthor = discussion.user
     work_title = session.query(Work_titles).filter_by(id=work_id).one()
     author_id = work_title.author_id
-    if request.method == 'POST':
-        session.delete(discussion)
-        session.commit()
-        return redirect(url_for('showindividualwork', author_id=author_id,
-                worktitle_id=work_id))
+    if messageauthor.superuser != "Yes":
+        return '''Insufficient rights. Please look for your administrator.
+                <script>function myFunction() {alert('You are not authorized
+                to delete messages in the forum. Please ensure that you have
+                superuser rights.');}</script><body onload='myFunction()'>'''
     else:
-        return render_template('deletemessage.html', message_id=message_id)
+        if request.method == 'POST':
+            session.delete(discussion)
+            session.commit()
+            return redirect(url_for('showindividualwork', author_id=author_id,
+                    worktitle_id=work_id))
+        else:
+            return render_template('deletemessage.html', message_id=message_id)
 
 
 if __name__ == '__main__':

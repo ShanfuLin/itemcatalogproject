@@ -25,10 +25,13 @@ session = DBSession()
 #session.add(a)
 #session.commit()
 
-a = session.query(User).all()
+a = session.query(Discussion).filter_by(id="1").one()
+b = a.user
 
-for item in a:
-    print item.name, item.email, item.superuser
+print b.name
+
+#for item in a:
+#    print item.user_id
 
 today = datetime.date.today()
 print today
