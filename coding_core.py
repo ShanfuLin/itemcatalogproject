@@ -196,7 +196,7 @@ def homepage():
 
 
 # Show all authors that belong to "light" category
-@app.route('/light')
+@app.route('/light/')
 def showlightauthors():
     authors = session.query(Author).filter_by(category="light").order_by(asc(Author.name))
     return render_template('Authors_listlight.html',
@@ -265,7 +265,7 @@ def showindividualwork(author_id, worktitle_id):
 
 
 # Code to allow logged-in user to create new message in forum
-@app.route('/<int:author_id>/<int:worktitle_id>/newmessage', methods=['GET', 'POST'])
+@app.route('/<int:author_id>/<int:worktitle_id>/newmessage/', methods=['GET', 'POST'])
 def newmessage(author_id, worktitle_id):
     if request.method == 'POST':
         message = request.form['message']
