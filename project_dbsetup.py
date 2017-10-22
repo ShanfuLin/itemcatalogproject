@@ -5,10 +5,11 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = 'user'
 
-    name =Column(String(80), nullable = False)
+    name = Column(String(80), nullable = False)
     email = Column(String(80), nullable = False)
     picture_url = Column(String(250))
     superuser = Column(String(3))
@@ -16,13 +17,14 @@ class User(Base):
 
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'id'           : self.id,
-           'name'         : self.name,
-           'email'        : self.email,
-           'picture_url'  : self.picture_url,
-       }
+        """Return object data in easily serializeable format"""
+        return {
+            'id'           : self.id,
+            'name'         : self.name,
+            'email'        : self.email,
+            'picture_url'  : self.picture_url,
+        }
+
 
 class Author(Base):
     __tablename__ = 'authors'
@@ -35,19 +37,20 @@ class Author(Base):
 
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'id'           : self.id,
-           'name'         : self.name,
-           'dob'          : self.dob,
-           'country'      : self.country,
-       }
+        """Return object data in easily serializeable format"""
+        return {
+            'id'           : self.id,
+            'name'         : self.name,
+            'dob'          : self.dob,
+            'country'      : self.country,
+        }
+
 
 class Work_titles(Base):
     __tablename__ = 'work_titles'
 
     id = Column(Integer, primary_key=True)
-    author_id = Column(Integer,ForeignKey('authors.id'))
+    author_id = Column(Integer, ForeignKey('authors.id'))
     work_title = Column(String(250), nullable=False)
     category = Column(String(250))
     summary = Column(String(1000))
@@ -55,36 +58,36 @@ class Work_titles(Base):
 
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'id'           : self.id,
-           'work_title'   : self.work_title,
-           'category'     : self.category,
-           'summary'      : self.summary,
-       }
+        """Return object data in easily serializeable format"""
+        return {
+            'id'           : self.id,
+            'work_title'   : self.work_title,
+            'category'     : self.category,
+            'summary'      : self.summary,
+        }
+
 
 class Discussion(Base):
     __tablename__ = 'discussion'
 
     id = Column(Integer, primary_key=True)
     message = Column(String(250))
-    user_id = Column(Integer,ForeignKey('user.id'))
-    work_id = Column(Integer,ForeignKey('work_titles.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    work_id = Column(Integer, ForeignKey('work_titles.id'))
     date_created = Column(String(250))
     user = relationship(User)
     work_title = relationship(Work_titles)
 
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'id'           : self.id,
-           'message'      : self.message,
-           'user'        : self.user_id,
-           'date'        : self.date_created,
-       }
+        """Return object data in easily serializeable format"""
+        return {
+            'id'           : self. id,
+            'message'      : self. message,
+            'user'        : self. user_id,
+            'date'        : self.date_created,
+        }
+
 
 engine = create_engine('sqlite:///authorsandworktitles.db')
-
-
 Base.metadata.create_all(engine)

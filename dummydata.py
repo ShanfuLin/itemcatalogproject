@@ -21,7 +21,9 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-
+# Following code are dummy data to be added into the database. Apart
+# from the User table, dummy data had been added into all other
+# tables.
 author1 = Author(name="Aldous Huxley", country="United Kingdom",
                      dob="26/7/1884", category="dark")
 

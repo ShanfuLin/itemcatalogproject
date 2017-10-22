@@ -27,26 +27,30 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Thoughts Repository"
 
+
+# "Helper" code to create user in database if non-existent in database
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture_url=login_session['picture'], superuser="No")
+    newUser = User(name=login_session['username'], email=login_session
+                ['email'], picture_url=login_session['picture'],
+                superuser="No")
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
-
+# "Helper" code to get specific user information from database
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
-
+# "Helper" code to get specific user id from database
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
         return None
+
 
 # Create anti-forgery state token
 @app.route('/login')
@@ -56,6 +60,7 @@ def showLogin():
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('users_signin.html', STATE=state)
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -109,8 +114,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -143,10 +147,12 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius:\
+    150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
 
 @app.route('/logout')
 def gdisconnect():
@@ -179,10 +185,10 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
 @app.route('/')
 @app.route('/home/')
 def homepage():
-    print login_session
     if 'username' not in login_session:
         return render_template('main_pagepublic.html')
     else:
@@ -193,56 +199,88 @@ def homepage():
 @app.route('/light')
 def showlightauthors():
     authors = session.query(Author).filter_by(category="light").order_by(asc(Author.name))
-    return render_template('Authors_listlight.html', authors=authors, login_session=login_session)
+    return render_template('Authors_listlight.html',
+            authors=authors, login_session=login_session)
 
+
+# Show all authors that belong to "light" category in JSON format
+@app.route('/light/JSON/')
+def showlightauthorsinJSON():
+    authors = session.query(Author).filter_by(category="light").order_by(asc(Author.name))
+    return jsonify(authors=[individual.serialize for individual in authors])
+
+
+# Show all authors that belong to "dark" category
 @app.route('/dark')
 def showdarkauthors():
     authors = session.query(Author).filter_by(category="dark").order_by(asc(Author.name))
-    return render_template('Authors_listdark.html', authors=authors, login_session=login_session)
+    return render_template('Authors_listdark.html',
+            authors=authors, login_session=login_session)
 
+# Show all authors that belong to "dark" category in JSON format
+@app.route('/dark/JSON/')
+def showlightauthorsinJSON():
+    authors = session.query(Author).filter_by(category="dark").order_by(asc(Author.name))
+    return jsonify(authors=[individual.serialize for individual in authors])
+
+
+# Show all authors' work that belong to "light" category
 @app.route('/light/<int:author_id>/')
 def showlightauthorworks(author_id):
     author = session.query(Author).filter_by(id=author_id).one()
     works = session.query(Work_titles).filter_by(author_id=author_id)
-    return render_template('Author_works.html', author=author, works=works, login_session=login_session)
-    #Shanfu added the following code to find out how "items" as an object looks like when printed
-    #if 'username' not in login_session or creator.id != login_session['user_id']:
-    #    return render_template('publicmenu.html', items=items, restaurant=restaurant, creator=creator)
-    #else:
-    #    return render_template('menu.html', items=items, restaurant=restaurant, creator=creator)
+    return render_template('Author_works.html',
+            author=author, works=works, login_session=login_session)
 
+
+# Show all authors' work that belong to "dark" category
 @app.route('/dark/<int:author_id>/')
 def showdarkauthorworks(author_id):
     author = session.query(Author).filter_by(id=author_id).one()
     works = session.query(Work_titles).filter_by(author_id=author_id)
-    return render_template('Author_works.html', author=author, works=works, login_session=login_session)
+    return render_template('Author_works.html',
+            author=author, works=works, login_session=login_session)
 
+
+# Show individual work information
 @app.route('/<int:author_id>/<int:worktitle_id>/')
-def showindividualwork(author_id,worktitle_id):
+def showindividualwork(author_id, worktitle_id):
     author = session.query(Author).filter_by(id=author_id).one()
     work = session.query(Work_titles).filter_by(id=worktitle_id).one()
     discussions = session.query(Discussion).filter_by(work_id=worktitle_id).all()
     if 'username' not in login_session:
-        return render_template('individual_workpublic.html', author=author, work=work, discussions=discussions, login_session=login_session)
+        return render_template('individual_workpublic.html',
+                author=author, work=work, discussions=discussions,
+                login_session=login_session)
     else:
         user = session.query(User).filter_by(email=login_session['email']).one()
         if user.superuser == "Yes":
-            return render_template('individual_worksuperuser.html', author=author, work=work, discussions=discussions, login_session=login_session)
+            return render_template('individual_worksuperuser.html',
+                    author=author, work=work, discussions=discussions,
+                    login_session=login_session)
         else:
-            return render_template('individual_workmember.html', author=author, work=work, discussions=discussions, login_session=login_session)
+            return render_template('individual_workmember.html',
+                    author=author, work=work, discussions=discussions,
+                    login_session=login_session)
 
+
+# Code to allow logged-in user to create new message in forum
 @app.route('/<int:author_id>/<int:worktitle_id>/newmessage', methods=['GET', 'POST'])
-def newmessage(author_id,worktitle_id):
+def newmessage(author_id, worktitle_id):
     if request.method == 'POST':
         message = request.form['message']
         date = today.strftime('%d/%m/%Y')
-        discussion = Discussion(message=message, date_created=date, user_id=login_session['user_id'], work_id=worktitle_id)
+        discussion = Discussion(message=message, date_created=date,
+        user_id=login_session['user_id'], work_id=worktitle_id)
         session.add(discussion)
         session.commit()
-        return redirect(url_for('showindividualwork',author_id=author_id,worktitle_id=worktitle_id))
+        return redirect(url_for('showindividualwork', author_id=author_id,
+                worktitle_id=worktitle_id))
     else:
         return render_template('newmessage.html')
 
+
+# Code to allow super-user to edit/moderate message in forum
 @app.route('/editmessage/<int:message_id>/', methods=['GET', 'POST'])
 def editmessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
@@ -255,10 +293,13 @@ def editmessage(message_id):
         discussion.message = updatedmessage
         session.add(discussion)
         session.commit()
-        return redirect(url_for('showindividualwork',author_id=author_id,worktitle_id=work_id))
+        return redirect(url_for('showindividualwork', author_id=author_id,
+                worktitle_id=work_id))
     else:
         return render_template('editmessage.html', message_id=message_id)
 
+
+# Code to allow super-user to delete message in forum
 @app.route('/deletemessage/<int:message_id>/', methods=['GET', 'POST'])
 def deletemessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
@@ -268,10 +309,10 @@ def deletemessage(message_id):
     if request.method == 'POST':
         session.delete(discussion)
         session.commit()
-        return redirect(url_for('showindividualwork',author_id=author_id,worktitle_id=work_id))
+        return redirect(url_for('showindividualwork', author_id=author_id,
+                worktitle_id=work_id))
     else:
         return render_template('deletemessage.html', message_id=message_id)
-
 
 
 if __name__ == '__main__':
