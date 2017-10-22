@@ -211,7 +211,7 @@ def showlightauthorsinJSON():
 
 
 # Show all authors that belong to "dark" category
-@app.route('/dark')
+@app.route('/dark/')
 def showdarkauthors():
     authors = session.query(Author).filter_by(category="dark").order_by(asc(Author.name))
     return render_template('Authors_listdark.html',
