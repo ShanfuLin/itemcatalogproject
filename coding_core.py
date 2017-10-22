@@ -219,7 +219,7 @@ def showdarkauthors():
 
 # Show all authors that belong to "dark" category in JSON format
 @app.route('/dark/JSON/')
-def showlightauthorsinJSON():
+def showdarkauthorsinJSON():
     authors = session.query(Author).filter_by(category="dark").order_by(asc(Author.name))
     return jsonify(authors=[individual.serialize for individual in authors])
 
