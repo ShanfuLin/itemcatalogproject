@@ -280,7 +280,9 @@ def newmessage(author_id, worktitle_id):
         return render_template('newmessage.html')
 
 
-# Code to allow super-user to edit/moderate message in forum
+# Code to allow super-user to edit/moderate message in forum. Before you can
+# do this, ensure that you have updated the column "superuser" in the User
+# table to "Yes" for the user you wish to grant administrative rights.
 @app.route('/editmessage/<int:message_id>/', methods=['GET', 'POST'])
 def editmessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
@@ -299,7 +301,9 @@ def editmessage(message_id):
         return render_template('editmessage.html', message_id=message_id)
 
 
-# Code to allow super-user to delete message in forum
+# Code to allow super-user to delete message in forum. Before you can
+# do this, ensure that you have updated the column "superuser" in the User
+# table to "Yes" for the user you wish to grant administrative rights.
 @app.route('/deletemessage/<int:message_id>/', methods=['GET', 'POST'])
 def deletemessage(message_id):
     discussion = session.query(Discussion).filter_by(id=message_id).one()
