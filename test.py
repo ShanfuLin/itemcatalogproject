@@ -21,17 +21,17 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 #a = session.query(User).filter_by(email="mountainturtle87@gmail.com").one()
-#a.superuser = "Yes"
+#a.superuser = "No"
 #session.add(a)
 #session.commit()
 
-a = session.query(Discussion).filter_by(id="1").one()
-b = a.user
+a = session.query(User).all()
+#b = a.user
 
-print b.name
+#print b.name
 
-#for item in a:
-#    print item.user_id
+for item in a:
+    print item.name, item.superuser, item.id
 
 today = datetime.date.today()
 print today

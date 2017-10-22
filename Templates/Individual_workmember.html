@@ -40,6 +40,11 @@
         <div>
           {{discussion.message}}
         </div>
+        {%if login_session['user_id']==discussion.user_id %}
+        <a href="/editmessage/{{discussion.id}}">edit</a>
+        <a> </a>
+        <a href="/deletemessage/{{discussion.id}}">delete</a>
+        {% endif %}
         <br>
         <br>
         {% endfor %}
