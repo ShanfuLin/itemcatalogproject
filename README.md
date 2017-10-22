@@ -34,7 +34,14 @@ If this is your first time running the application, set up the database by first
   ** Running on http://0.0.0.0:5000/
   ** Restarting with reloader
 
- To view the application, open any of your browser and enter "http://0.0.0.0:5000/" in the URL field. Voila! You have successfully launched the application and are now ready to explore its features.
- License/usage restriction
+To view the application, open any of your browser and enter "http://0.0.0.0:5000/" in the URL field. Voila! You have successfully launched the application and are now ready to explore its features. One important thing to take note of. In order for one to view how the application consider logged in users' authorization status, the following code will need to be run.  By default, all new signed in members will not have superuser rights. The granting of superuser rights will have to be carried out in the backend by someone with access to the modification of the database.
+
+### a = session.query(User).filter_by(email=###emailaddress used by the user to log on the application###).one()
+### a.superuser = "Yes"
+### session.add(a)
+### session.commit()
+
+
+License/usage restriction
 
 This is a public domain work and there is no license/usage restriction on it. Please feel free to use/modify the codes in anyway to suit your own needs. If you have more questions pertaining to this application, drop an email to Shanfu87@yahoo.com and I will be happy to assist you.
