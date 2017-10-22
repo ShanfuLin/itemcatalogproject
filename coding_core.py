@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify,
+from flask import Flask, render_template, request, redirect, jsonify
 from flask import url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
