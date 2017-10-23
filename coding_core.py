@@ -317,8 +317,9 @@ def newmessage(author_id, worktitle_id):
                                         work_id=worktitle_id)
                 session.add(discussion)
                 session.commit()
-                return redirect(url_for('showindividualwork', author_id=author_id,
-                                    worktitle_id=worktitle_id))
+                return redirect(url_for('showindividualwork',
+                                        author_id=author_id,
+                                        worktitle_id=worktitle_id))
         else:
             return render_template('newmessage.html')
 
@@ -342,15 +343,17 @@ def editmessage(message_id):
                 discussion.message = updatedmessage
                 session.add(discussion)
                 session.commit()
-                return redirect(url_for('showindividualwork', author_id=author_id,
+                return redirect(url_for('showindividualwork',
+                                        author_id=author_id,
                                         worktitle_id=work_id))
             else:
                 if login_session["user_id"] != discussion.user_id:
                     return '''Insufficient rights. Please look for your
                               administrator. <script>function myFunction()
                               {alert('You are not authorized to edit messages
-                              in the forum. Please ensure that you have superuser
-                              rights.');}</script><body onload='myFunction()'>'''
+                              in the forum. Please ensure that you have
+                              superuse rights.'
+                              );}</script><body onload='myFunction()'>'''
                 else:
                     updatedmessage = request.form['message']
                     date = today.strftime('%d/%m/%Y')
@@ -382,8 +385,9 @@ def deletemessage(message_id):
             if messageauthor.superuser == "Yes":
                 session.delete(discussion)
                 session.commit()
-                return redirect(url_for('showindividualwork', author_id=author_id,
-                                worktitle_id=work_id))
+                return redirect(url_for('showindividualwork',
+                                        author_id=author_id,
+                                        worktitle_id=work_id))
             else:
                 if login_session["user_id"] != discussion.user_id:
                     return '''Insufficient rights. Please look for your
