@@ -55,6 +55,7 @@ class Work_titles(Base):
     category = Column(String(250))
     summary = Column(String(1000))
     author = relationship(Author)
+    owner = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):

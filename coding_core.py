@@ -290,31 +290,41 @@ def showindividualwork(author_id, worktitle_id):
                                    login_session=login_session)
 
 
-# Code to allow logged-in user to create new message in forum
+# Code to allow logged-in and authorized user to create
+# new message in commentary section.
 @app.route('/<int:author_id>/<int:worktitle_id>/newmessage/',
            methods=['GET', 'POST'])
 def newmessage(author_id, worktitle_id):
+    work_title = session.query(Work_titles).filter_by(id=worktitle_id).one()
     if 'username' not in login_session:
         return '''Please ensure that you are logged in.<script>function
                 myFunction() {alert('Please ensure that you are logged
                 in first.');}</script><body onload='myFunction()'>'''
     else:
         if request.method == 'POST':
-            message = request.form['message']
-            date = today.strftime('%d/%m/%Y')
-            discussion = Discussion(message=message, date_created=date,
-                                    user_id=login_session['user_id'],
-                                    work_id=worktitle_id)
-            session.add(discussion)
-            session.commit()
-            return redirect(url_for('showindividualwork', author_id=author_id,
+            if login_session["user_id"] != work_title.owner:
+                return '''Insufficient rights. You are not
+                          in charge of this title. Please look for your
+                          administrator. <script>function myFunction()
+                          {alert('You are not authorized to edit messages
+                          in the forum. Please ensure that you have superuser
+                          rights.');}</script><body onload='myFunction()'>'''
+            else:
+                message = request.form['message']
+                date = today.strftime('%d/%m/%Y')
+                discussion = Discussion(message=message, date_created=date,
+                                        user_id=login_session['user_id'],
+                                        work_id=worktitle_id)
+                session.add(discussion)
+                session.commit()
+                return redirect(url_for('showindividualwork', author_id=author_id,
                                     worktitle_id=worktitle_id))
         else:
             return render_template('newmessage.html')
 
 
 # Code to allow super-user or message owner to edit/moderate message
-# in forum. Before you can do this, ensure that you have
+# in commentary section. Before you can do this, ensure that you have
 # updated the column "superuser" in the User
 # table to "Yes" for the user you wish to grant administrative rights.
 @app.route('/editmessage/<int:message_id>/', methods=['GET', 'POST'])
@@ -324,37 +334,40 @@ def editmessage(message_id):
     messageauthor = discussion.user
     work_title = session.query(Work_titles).filter_by(id=work_id).one()
     author_id = work_title.author_id
-    if request.method == 'POST':
-        if messageauthor.superuser == "Yes":
-            updatedmessage = request.form['message']
-            date = today.strftime('%d/%m/%Y')
-            discussion.message = updatedmessage
-            session.add(discussion)
-            session.commit()
-            return redirect(url_for('showindividualwork', author_id=author_id,
-                                    worktitle_id=work_id))
-        else:
-            if login_session["user_id"] != discussion.user_id:
-                return '''Insufficient rights. Please look for your
-                          administrator. <script>function myFunction()
-                          {alert('You are not authorized to edit messages
-                          in the forum. Please ensure that you have superuser
-                          rights.');}</script><body onload='myFunction()'>'''
-            else:
+    if 'username' in login_session:
+        if request.method == 'POST':
+            if messageauthor.superuser == "Yes":
                 updatedmessage = request.form['message']
                 date = today.strftime('%d/%m/%Y')
                 discussion.message = updatedmessage
                 session.add(discussion)
                 session.commit()
-                return redirect(url_for('showindividualwork',
-                                        author_id=author_id,
+                return redirect(url_for('showindividualwork', author_id=author_id,
                                         worktitle_id=work_id))
+            else:
+                if login_session["user_id"] != discussion.user_id:
+                    return '''Insufficient rights. Please look for your
+                              administrator. <script>function myFunction()
+                              {alert('You are not authorized to edit messages
+                              in the forum. Please ensure that you have superuser
+                              rights.');}</script><body onload='myFunction()'>'''
+                else:
+                    updatedmessage = request.form['message']
+                    date = today.strftime('%d/%m/%Y')
+                    discussion.message = updatedmessage
+                    session.add(discussion)
+                    session.commit()
+                    return redirect(url_for('showindividualwork',
+                                            author_id=author_id,
+                                            worktitle_id=work_id))
+        else:
+            return render_template('editmessage.html', message_id=message_id)
     else:
-        return render_template('editmessage.html', message_id=message_id)
+        return "Please ensure that you are logged in first."
 
 
-# Code to allow super-user or message owner to delete message in forum.
-# Before you can do this, ensure that you have updated the
+# Code to allow super-user or message owner to delete message in commentary
+# section. Before you can do this, ensure that you have updated the
 # column "superuser" in the User table to "Yes" for the user
 # you wish to grant administrative rights.
 @app.route('/deletemessage/<int:message_id>/', methods=['GET', 'POST'])
@@ -364,28 +377,31 @@ def deletemessage(message_id):
     messageauthor = discussion.user
     work_title = session.query(Work_titles).filter_by(id=work_id).one()
     author_id = work_title.author_id
-    if request.method == 'POST':
-        if messageauthor.superuser == "Yes":
-            session.delete(discussion)
-            session.commit()
-            return redirect(url_for('showindividualwork', author_id=author_id,
-                            worktitle_id=work_id))
-        else:
-            if login_session["user_id"] != discussion.user_id:
-                return '''Insufficient rights. Please look for your
-                          administrator. <script>function myFunction()
-                          {alert('You are not authorized to delete messages
-                          in the forum. Please ensure that you have
-                          superuser rights.');}</script><body
-                          onload='myFunction()'>'''
-            else:
+    if 'username' in login_session:
+        if request.method == 'POST':
+            if messageauthor.superuser == "Yes":
                 session.delete(discussion)
                 session.commit()
-                return redirect(url_for('showindividualwork',
-                                        author_id=author_id,
-                                        worktitle_id=work_id))
+                return redirect(url_for('showindividualwork', author_id=author_id,
+                                worktitle_id=work_id))
+            else:
+                if login_session["user_id"] != discussion.user_id:
+                    return '''Insufficient rights. Please look for your
+                              administrator. <script>function myFunction()
+                              {alert('You are not authorized to delete messages
+                              in the forum. Please ensure that you have
+                              superuser rights.');}</script><body
+                              onload='myFunction()'>'''
+                else:
+                    session.delete(discussion)
+                    session.commit()
+                    return redirect(url_for('showindividualwork',
+                                            author_id=author_id,
+                                            worktitle_id=work_id))
+        else:
+            return render_template('deletemessage.html', message_id=message_id)
     else:
-        return render_template('deletemessage.html', message_id=message_id)
+        return "Please ensure that you are logged in first."
 
 
 if __name__ == '__main__':

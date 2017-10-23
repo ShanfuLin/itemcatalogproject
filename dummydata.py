@@ -85,69 +85,69 @@ session.add(author10)
 session.commit()
 
 
-work_title1 = Work_titles(author_id="1", work_title="Brave New World", category="Book",
+work_title1 = Work_titles(author_id="1", work_title="Brave New World", category="Book", owner="1",
              summary=u"The natural processes of birth, aging, and death represent horrors in this world. Bernard Marx, an Alpha-Plus or high-caste psychologist, emerges as the single discontented person in a world where material comfort and physical pleasure are the only concerns.", author=author1)
 
 session.add(work_title1)
 session.commit()
 
-work_title2 = Work_titles(author_id="2", work_title="Metamorphosis", category="Book",
+work_title2 = Work_titles(author_id="2", work_title="Metamorphosis", category="Book", owner="2",
              summary=u"Gregor is the main character of the story. He works as a traveling salesman in order to provide money for his sister and parents. He wakes up one morning finding himself transformed into an insect. After the metamorphosis, Gregor becomes unable to work and is confined to his room for the remainder of the story.",
              author=author2)
 
 session.add(work_title2)
 session.commit()
 
-work_title3 = Work_titles(author_id="3", work_title="Beyond Good and Evil", category="Book",
+work_title3 = Work_titles(author_id="3", work_title="Beyond Good and Evil", category="Book", owner="2",
              summary=u"A world of rigid facts can be spoken about definitively, which is the source of our conception of truth and other absolutes, such as God and morality. Nietzsche sees the facts and things of traditional philosophy as far from rigid, and subject to all sorts of shifts and changes.",
              author=author3)
 
 session.add(work_title3)
 session.commit()
 
-work_title4 = Work_titles(author_id="4", work_title="1984", category="Book",
+work_title4 = Work_titles(author_id="4", work_title="1984", category="Book", owner="2",
              summary=u"In George Orwell's 1984, Winston Smith wrestles with oppression in Oceania, a place where the Party scrutinizes human actions with ever-watchful Big Brother. Defying a ban on individuality, Winston dares to express his thoughts in a diary and pursues a relationship with Julia.",
              author=author4)
 
 session.add(work_title4)
 session.commit()
 
-work_title5 = Work_titles(author_id="5", work_title="Walden", category="Book",
+work_title5 = Work_titles(author_id="5", work_title="Walden", category="Book", owner="2",
              summary=u"Walden serves as a written account of the two years Henry David Thoreau lived alone in a cabin in Concord, Massachusetts. He built this cabin, grew vegetables, and had transcendental experiences. He uses these to examine the fundamental elements of identity. Thoreau builds himself a small cabin on Walden Pond.",
              author=author5)
 
 session.add(work_title5)
 session.commit()
 
-work_title6 = Work_titles(author_id="6", work_title="Das Kapital", category="Book",
+work_title6 = Work_titles(author_id="6", work_title="Das Kapital", category="Book", owner="2",
              summary=u"Das Kapital, one of the major works of the 19th-century economist and philosopher Karl Marx (1818–83), in which he expounded his theory of the capitalist system, its dynamism, and its tendencies toward self-destruction.",
              author=author6)
 
 session.add(work_title6)
 session.commit()
 
-work_title7 = Work_titles(author_id="7", work_title="Anti Fragile", category="Book",
+work_title7 = Work_titles(author_id="7", work_title="Anti Fragile", category="Book", owner="2",
              summary=u"The author, Nassim Nicholas Taleb, is a statistician and investigates problems of randomness and uncertainty. He argues that some systems thrive when exposed to shocks and crises, instead of breaking under their pressure.",
              author=author7)
 
 session.add(work_title7)
 session.commit()
 
-work_title8 = Work_titles(author_id="8", work_title="Gitanjali", category="Poetry",
+work_title8 = Work_titles(author_id="8", work_title="Gitanjali", category="Poetry", owner="2",
              summary=u"Gitanjali Song Offerings is a collection of 103 prose poems, selected by Tagore from among his Bengali poems and translated by him into English. The collection brought Tagore international attention and won him the Nobel Prize in Literature.",
              author=author8)
 
 session.add(work_title8)
 session.commit()
 
-work_title9 = Work_titles(author_id="9", work_title="Tractatus", category="Book",
+work_title9 = Work_titles(author_id="9", work_title="Tractatus", category="Book", owner="2",
              summary=u"Philosophy, unlike science, is not a body of propositions. It should be thought of as the activity of clarifying the often obscure logical structure of language and thought.",
              author=author9)
 
 session.add(work_title9)
 session.commit()
 
-work_title10 = Work_titles(author_id="10", work_title="Man's Search for Meaning", category="Book",
+work_title10 = Work_titles(author_id="10", work_title="Man's Search for Meaning", category="Book", owner="2",
              summary=u"Man's Search for Meaning Summary. Man's Search For Meaning is a work of non-fiction that deals with Viktor Frankl's experience living in Nazi concentration camps, as well as his psychotherapeutic technique called logotherapy.",
              author=author10)
 
